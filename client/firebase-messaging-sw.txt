@@ -1,0 +1,92 @@
+'use strict';
+
+// importScripts("https://www.gstatic.com/firebasejs/5.2.0/firebase-app.js")
+// importScripts("https://www.gstatic.com/firebasejs/5.2.0/firebase-messaging.js")
+
+console.log('... Service Worker File Running ...');
+
+// Listner for Push Notification
+self.addEventListener('push', function (event) {
+  console.log('Received a push message', event);
+
+  var notification = event.data.json().notification
+  var title = notification.title || 'Yay a message.';
+  var body = notification.body || 'We have received a push message.';
+  var icon = '/images/icon-192x192.png';
+  // var tag = 'simple-push-demo-notification-tag';
+
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body: body,
+      icon: icon,
+      // tag: tag
+    })
+  );
+
+});
+
+self.addEventListener('notificationclick', function (event) {
+  console.log('On notification click: ', event.notification.tag);
+  // Android doesn’t close the notification when you click on it
+  // See: http://crbug.com/463146
+  event.notification.close();
+
+  // This looks to see if the current is already open and
+  // focuses if it is
+  event.waitUntil(clients.matchAll({
+    type: 'window'
+  }).then(function (clientList) {
+    for (var i = 0; i < clientList.length; i++) {
+      var client = clientList[i];
+      if (client.url === '/' && 'focus' in client) {
+        return client.focus();
+      }
+    }
+    if (clients.openWindow) {
+      return clients.openWindow('/');
+    }
+  }));
+});
+
+// var config = {
+//   messagingSenderId: "510627188592"
+// };
+// firebase.initializeApp(config);
+
+// const messaging = firebase.messaging();
+
+// // console.log('messaging... ', messaging.usePublicVapidKey)
+// // //BJzr2WI_decwGYgdHMflpNkJzf7P30I75F_uJEyhG8DV2lrYrJRgnKEI2NxUtpdjMqvKu1es8w4dR_RnUmfb4wE
+// // messaging.usePublicVapidKey("BJzr2WI_decwGYgdHMflpNkJzf7P30I75F_uJEyhG8DV2lrYrJRgnKEI2NxUtpdjMqvKu1es8w4dR_RnUmfb4wE");
+// // // messaging.requestPermission()
+// // //   .then(() => {
+// // //     console.log('messaging ALLOWED', );
+// // //     messaging.getToken().then(function (currentToken) {
+// // //       if (currentToken) {
+// // //         console.log('currentToken ', currentToken);
+// // //       } else {
+// // //         // Show permission request.
+// // //         console.log('No Instance ID token available. Request permission to generate one.');
+// // //         // Show permission UI.
+// // //         //   updateUIForPushPermissionRequired();
+// // //         //   setTokenSentToServer(false);
+// // //       }
+// // //     }).catch(function (err) {
+// // //       console.log('An error occurred while retrieving token. ', err);
+// // //       // showToken('Error retrieving Instance ID token. ', err);
+// // //       // setTokenSentToServer(false);
+// // //     });
+// // //   }).catch(() => console.log("user didn't give permission"))
+
+// messaging.setBackgroundMessageHandler(function (payload) {
+//   console.log('[firebase-messaging-sw.js] Received background message ', payload);
+//   // Customize notification here
+//   var notificationOptions = {
+//     body: 'Background Message body.',
+//     icon: '/firebase-logo.png'
+//   };
+
+//   var notificationTitle = 'Background Message Title';
+//   return self.registration.showNotification(notificationTitle,
+//     notificationOptions);
+// });

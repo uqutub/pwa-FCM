@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>PWA-Push-Notification</title>
+
+    <link rel="manifest" href="manifest.json">
+
+    <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCRdXg-kyQwM0LF9EY0exYYN3EpdHqV9jo",
+            authDomain: "pwapushnotification-633e2.firebaseapp.com",
+            databaseURL: "https://pwapushnotification-633e2.firebaseio.com",
+            projectId: "pwapushnotification-633e2",
+            storageBucket: "",
+            messagingSenderId: "510627188592"
+        };
+        firebase.initializeApp(config);
+
+        // getting messaging Object from firebase
+        const messaging = firebase.messaging();
+
+        messaging.requestPermission().then(function () {
+            console.log('Notification permission granted.');
+            return messaging.getToken();
+        }).then(function (token) {
+            // Displaying user token
+            console.log('token >>>> ', token);
+        }).catch(function (err) { // Happen if user deney permission
+            console.log('Unable to get permission to notify.', err);
+        });
+
+        // do whatever you want on getting push notification in your front application
+        messaging.onMessage(function (payload) {
+            console.log('onMessage', payload);
+        });
+    </script>
+
+    <script src="index.js"></script>
+</head>
+
+<body>
+
+</body>
+
+</html>
