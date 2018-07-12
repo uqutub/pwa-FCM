@@ -40,6 +40,18 @@
         messaging.onMessage(function (payload) {
             console.log('onMessage', payload);
         });
+        fetch("https://us-central1-pwapushnotification-633e2.cloudfunctions.net/helloWorld", {
+            method: 'POST',
+            body: {
+                token: "ewD5MHBousU:APA91bEuIz1bS4E1U9bgZdgO3YBe2Uk9LLhvbzQC_YMtfKNoBHW6lpbXFM-_kqc6PGOXDs63s_5ujhArq32Aq7Q6kQ0ZIirLZxIt630fB5rIc-MZ2rjeiGKfiw1MWS1f2C83zDsViZb075P6lh4tJOqMPcI_y-dgNA",
+                title: "my title",
+                message: "my body message"
+            },
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then((res) =>res)
+
     </script>
 
     <script src="index.js"></script>
